@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+<% if (promo && page === 1) { %>
+  <p class="promo">Today only: <%= promo.description.replace(/, today only$/, '') %> with code <strong><%= promo.code %></strong></p>
+<% } %>
+<div class="toolbar">
+  <div>
+    <h1><%= title %></h1>
+    <p class="muted"><%= total %> product<%= total === 1 ? '' : 's' %><% if (pageCount > 1) { %>, page <%= page %> of <%= pageCount %><% } %></p>
+  </div>
+  <form method="get" action="/" class="sort">
+    <% if (category) { %><input type="hidden" name="category" value="<%= category.slug %>"><% } %>
+    <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
+    <label>Sort
+      <select name="sort" onchange="this.form.submit()">
+        <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name</option>
+        <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: low to high</option>
+        <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: high to low</option>
+      </select>
+    </label>
+    <noscript><button type="submit">Apply</button></noscript>
+  </form>
+</div>
+
+<% if (items.length === 0) { %>
+  <p class="empty">No products match. <a href="/">See everything</a></p>
+<% } else { %>
+  <div class="grid">
+    <% items.forEach((product) => { %>
+      <%- include('partials/product-card', { product, returnTo: '/' }) %>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/pagination') %>
+<%- include('partials/footer') %>

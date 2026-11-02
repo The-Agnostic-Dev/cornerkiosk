@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+<h1>Your basket</h1>
+<% if (totals.lines.length === 0) { %>
+  <p class="empty">Your basket is empty. <a href="/">Start shopping</a></p>
+<% } else { %>
+  <table class="lines">
+    <thead>
+      <tr><th>Product</th><th>Price</th><th>Quantity</th><th class="num">Total</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% totals.lines.forEach((line) => { %>
+      <tr data-product="<%= line.productId %>">
+        <td><a href="/products/<%= line.slug %>"><%= line.name %></a></td>
+        <td><%= money(line.unitPence) %></td>
+        <td>
+          <form action="/cart/items/<%= line.productId %>" method="post" class="inline">
+            <input type="number" name="qty" value="<%= line.qty %>" class="qty" aria-label="Quantity for <%= line.name %>">
+            <button type="submit" class="link">Update</button>
+          </form>
+        </td>
+        <td class="num line-total"><%= money(line.unitPence) %></td>
+        <td>
+          <form action="/cart/items/<%= line.productId %>" method="post" class="inline">
+            <input type="hidden" name="action" value="remove">
+            <button type="submit" class="link danger">Remove</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div class="cart-bottom">
+    <div class="card coupon">
+      <% if (coupon) { %>
+        <p>Code <strong><%= coupon.code %></strong> applied (<%= coupon.description %>).</p>
+        <form action="/cart/coupon" method="post">
+          <input type="hidden" name="action" value="remove">
+          <button type="submit" class="link">Remove code</button>
+        </form>
+      <% } else { %>
+        <form action="/cart/coupon" method="post" class="inline">
+          <label for="code">Discount code</label>
+          <input id="code" name="code" autocomplete="off">
+          <button type="submit" class="btn">Apply</button>
+        </form>
+      <% } %>
+    </div>
+
+    <table class="totals">
+      <tr class="subtotal"><td>Subtotal</td><td class="num"><%= money(totals.subtotalPence) %></td></tr>
+      <% if (totals.discountPence > 0) { %>
+      <tr class="discount"><td>Discount (<%= totals.couponCode %>)</td><td class="num">-<%= money(totals.discountPence) %></td></tr>
+      <% } %>
+      <tr class="delivery"><td>Delivery</td><td class="num"><%= totals.deliveryPence === 0 ? 'Free' : money(totals.deliveryPence) %></td></tr>
+      <tr class="grand-total"><td>Total</td><td class="num"><%= money(totals.totalPence) %></td></tr>
+    </table>
+  </div>
+  <p class="muted">Free delivery on orders of <%= money(freeDeliveryFrom) %> or more. Click &amp; collect is always free.</p>
+  <p class="actions"><a class="btn primary" href="/checkout">Go to checkout</a></p>
+<% } %>
+<%- include('partials/footer') %>

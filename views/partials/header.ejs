@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | Corner Kiosk</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Corner Kiosk</a>
+    <form class="search" action="/" method="get" role="search">
+      <input type="search" name="search" value="<%= typeof q === 'string' ? q : '' %>" placeholder="Search milk, bread, crisps..." aria-label="Search products">
+      <button type="submit">Search</button>
+    </form>
+    <nav>
+      <a href="/orders">Orders</a>
+      <a href="/cart" class="basket-link">Basket <span class="cart-count"><%= cartCount %></span></a>
+    </nav>
+  </header>
+  <nav class="categories">
+    <a href="/" class="<%= path === '/' && !query.category ? 'active' : '' %>">All</a>
+    <% categories.forEach((c) => { %>
+      <a href="/?category=<%= c.slug %>" class="<%= query.category === c.slug ? 'active' : '' %>"><%= c.name %></a>
+    <% }) %>
+  </nav>
+  <main class="container">
+    <% flash.forEach((f) => { %>
+      <p class="flash <%= f.type %>"><%= f.message %></p>
+    <% }) %>

@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+<h1>Your orders</h1>
+<form action="/orders/lookup" method="post" class="card inline">
+  <label for="lookup-email">Email used at checkout</label>
+  <input id="lookup-email" name="email" type="email" value="<%= email ?? '' %>" required>
+  <button type="submit" class="btn">Show orders</button>
+</form>
+
+<% if (email && orders.length === 0) { %>
+  <p class="empty">No orders found for <%= email %>.</p>
+<% } else if (orders.length) { %>
+  <table class="lines orders">
+    <thead><tr><th>Order</th><th>Placed</th><th>Items</th><th>Status</th><th class="num">Total</th></tr></thead>
+    <tbody>
+      <% orders.forEach((o) => { %>
+      <tr class="order-row">
+        <td><a href="/orders/<%= o.id %>"><%= o.number %></a></td>
+        <td><%= formatDateTime(o.createdAt) %></td>
+        <td><%= o.lines.reduce((n, l) => n + l.qty, 0) %></td>
+        <td><%= o.status %></td>
+        <td class="num"><%= money(o.totalPence) %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+<%- include('partials/footer') %>

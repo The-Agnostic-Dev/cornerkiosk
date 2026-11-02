@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<p class="crumbs"><a href="/">Shop</a> / <a href="/?category=<%= category.slug %>"><%= category.name %></a></p>
+<div class="card product-detail">
+  <h1><%= product.name %></h1>
+  <p><%= product.description %></p>
+  <p class="price big"><%= money(product.pricePence) %></p>
+  <p class="stock <%= product.stock <= 0 ? 'out' : product.stock <= 5 ? 'low' : '' %>"><%= stockLabel(product) %></p>
+  <% if (product.stock > 0) { %>
+  <form action="/cart/items" method="post" class="inline">
+    <input type="hidden" name="productId" value="<%= product.id %>">
+    <input type="hidden" name="returnTo" value="/products/<%= product.slug %>">
+    <label>Quantity <input type="number" name="qty" value="1" min="1" max="<%= product.stock %>" class="qty"></label>
+    <button type="submit" class="btn primary">Add to basket</button>
+  </form>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

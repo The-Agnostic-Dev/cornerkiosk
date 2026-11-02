@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    image: cornerkiosk:local
+    ports:
+      - "5105:5105"
+    environment:
+      PORT: "5105"
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-kiosk}
+    restart: unless-stopped

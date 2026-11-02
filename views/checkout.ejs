@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+<h1>Checkout</h1>
+<p class="flash error" id="checkout-error" <%= error ? '' : 'hidden' %>><%= error ?? '' %></p>
+<div class="checkout">
+  <form action="/checkout" method="post" class="card" id="checkout-form">
+    <fieldset>
+      <legend>Your details</legend>
+      <label>Full name <input name="name" value="<%= values.name ?? '' %>" autocomplete="name"></label>
+      <% if (errors.name) { %><span class="field-error"><%= errors.name %></span><% } %>
+      <label>Email <input name="email" type="email" value="<%= values.email ?? '' %>" autocomplete="email"></label>
+      <% if (errors.email) { %><span class="field-error"><%= errors.email %></span><% } %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Delivery</legend>
+      <label class="radio"><input type="radio" name="deliveryMethod" value="delivery" <%= method !== 'collect' ? 'checked' : '' %>> Deliver to my address</label>
+      <label class="radio"><input type="radio" name="deliveryMethod" value="collect" <%= method === 'collect' ? 'checked' : '' %>> Click &amp; collect from the shop (free)</label>
+      <label>Address <textarea name="address" rows="3" autocomplete="street-address"><%= values.address ?? '' %></textarea></label>
+      <% if (errors.address) { %><span class="field-error"><%= errors.address %></span><% } %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Payment</legend>
+      <label>Card number <input name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242"></label>
+      <p class="muted small">Test mode: any 16 digit number works.</p>
+    </fieldset>
+
+    <button type="submit" class="btn primary">Place order</button>
+    <p class="muted" id="checkout-status" hidden>Processing payment…</p>
+  </form>
+
+  <aside class="card">
+    <h2>Order summary</h2>
+    <ul class="summary-lines">
+      <% totals.lines.forEach((l) => { %>
+        <li><span><%= l.qty %> &times; <%= l.name %></span><span><%= money(l.lineTotalPence) %></span></li>
+      <% }) %>
+    </ul>
+    <table class="totals">
+      <tr><td>Subtotal</td><td class="num"><%= money(totals.subtotalPence) %></td></tr>
+      <% if (totals.discountPence > 0) { %>
+      <tr><td>Discount (<%= totals.couponCode %>)</td><td class="num">-<%= money(totals.discountPence) %></td></tr>
+      <% } %>
+      <tr><td>Delivery</td><td class="num"><%= totals.deliveryPence === 0 ? 'Free' : money(totals.deliveryPence) %></td></tr>
+      <tr class="grand-total"><td>Total</td><td class="num"><%= money(totals.totalPence) %></td></tr>
+    </table>
+  </aside>
+</div>
+<%- include('partials/footer') %>

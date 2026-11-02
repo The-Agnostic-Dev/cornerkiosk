@@ -1,0 +1,14 @@
+<article class="card product-card">
+  <a href="/products/<%= product.slug %>" class="product-name"><%= product.name %></a>
+  <p class="muted"><%= product.description %></p>
+  <div class="row">
+    <strong class="price"><%= money(product.pricePence) %></strong>
+    <span class="stock <%= product.stock <= 0 ? 'out' : product.stock <= 5 ? 'low' : '' %>"><%= stockLabel(product) %></span>
+  </div>
+  <form action="/cart/items" method="post">
+    <input type="hidden" name="productId" value="<%= product.id %>">
+    <input type="hidden" name="qty" value="1">
+    <input type="hidden" name="returnTo" value="<%= returnTo %>">
+    <button type="submit" class="btn" <%= product.stock <= 0 ? 'disabled' : '' %>>Add to basket</button>
+  </form>
+</article>

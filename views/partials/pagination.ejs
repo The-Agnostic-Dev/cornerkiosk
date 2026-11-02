@@ -1,0 +1,17 @@
+<% if (pageCount > 1) { %>
+<nav class="pagination" aria-label="Pages">
+  <% if (page > 1) { %>
+    <a href="/?page=<%= page - 1 %>" rel="prev">&larr; Previous</a>
+  <% } %>
+  <% for (let n = 1; n <= pageCount; n++) { %>
+    <% if (n === page) { %>
+      <span aria-current="page"><%= n %></span>
+    <% } else { %>
+      <a href="/?page=<%= n %>"><%= n %></a>
+    <% } %>
+  <% } %>
+  <% if (page < pageCount) { %>
+    <a href="/?page=<%= page + 1 %>" rel="next">Next &rarr;</a>
+  <% } %>
+</nav>
+<% } %>

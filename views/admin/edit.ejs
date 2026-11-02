@@ -1,0 +1,31 @@
+<%- include('../partials/header') %>
+<p class="crumbs"><a href="/admin/products">Products</a> / Edit</p>
+<h1><%= product.name %></h1>
+<% const v = values ?? {
+  name: product.name,
+  description: product.description,
+  category: product.category,
+  price: product.pricePence,
+  stock: product.stock,
+  active: product.active ? 'on' : undefined,
+}; %>
+<form action="/admin/products/<%= product.id %>" method="post" class="card admin-form">
+  <label>Name <input name="name" value="<%= v.name %>"></label>
+  <% if (errors.name) { %><span class="field-error"><%= errors.name %></span><% } %>
+  <label>Description <textarea name="description" rows="3"><%= v.description %></textarea></label>
+  <label>Category
+    <select name="category">
+      <% categories.forEach((c) => { %>
+        <option value="<%= c.slug %>" <%= v.category === c.slug ? 'selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  </label>
+  <% if (errors.category) { %><span class="field-error"><%= errors.category %></span><% } %>
+  <label>Price (£) <input name="price" value="<%= v.price %>" inputmode="decimal"></label>
+  <% if (errors.price) { %><span class="field-error"><%= errors.price %></span><% } %>
+  <label>Stock <input name="stock" value="<%= v.stock %>" inputmode="numeric"></label>
+  <% if (errors.stock) { %><span class="field-error"><%= errors.stock %></span><% } %>
+  <label class="radio"><input type="checkbox" name="active" <%= v.active === 'on' ? 'checked' : '' %>> Show in shop</label>
+  <button type="submit" class="btn primary">Save product</button>
+</form>
+<%- include('../partials/footer') %>

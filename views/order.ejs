@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+<% if (placed) { %><p class="flash success">Thanks <%= order.customerName %>! Your order has been placed.</p><% } %>
+<h1>Order <%= order.number %></h1>
+<p class="muted">Placed <%= formatDateTime(order.createdAt) %> · <%= order.status %> ·
+  <%= order.deliveryMethod === 'collect' ? 'Click & collect' : 'Delivery to ' + order.address %></p>
+<table class="lines">
+  <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th class="num">Total</th></tr></thead>
+  <tbody>
+    <% order.lines.forEach((l) => { %>
+    <tr><td><%= l.name %></td><td><%= money(l.unitPence) %></td><td><%= l.qty %></td><td class="num"><%= money(l.lineTotalPence) %></td></tr>
+    <% }) %>
+  </tbody>
+</table>
+<table class="totals">
+  <tr><td>Subtotal</td><td class="num"><%= money(order.subtotalPence) %></td></tr>
+  <% if (order.discountPence > 0) { %>
+  <tr><td>Discount (<%= order.couponCode %>)</td><td class="num">-<%= money(order.discountPence) %></td></tr>
+  <% } %>
+  <tr><td>Delivery</td><td class="num"><%= order.deliveryPence === 0 ? 'Free' : money(order.deliveryPence) %></td></tr>
+  <tr class="grand-total"><td>Total paid</td><td class="num"><%= money(order.totalPence) %></td></tr>
+</table>
+<p><a href="/orders">All orders</a> · <a href="/">Keep shopping</a></p>
+<%- include('partials/footer') %>
