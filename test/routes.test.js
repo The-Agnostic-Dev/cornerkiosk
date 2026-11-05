@@ -23,6 +23,13 @@ describe("shop pages", () => {
   it("returns 404 for unknown products", async () => {
     await request(app).get("/products/caviar").expect(404);
   });
+
+  it("searches the catalogue and keeps the query", async () => {
+    const res = await request(app).get("/?q=milk").expect(200);
+    assert.match(res.text, /Whole milk 2L/);
+    assert.doesNotMatch(res.text, /Sourdough loaf/);
+    assert.match(res.text, /value="milk"/);
+  });
 });
 
 describe("basket and checkout", () => {
