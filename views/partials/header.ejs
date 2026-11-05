@@ -10,7 +10,7 @@
   <header class="site-header">
     <a class="brand" href="/">Corner Kiosk</a>
     <form class="search" action="/" method="get" role="search">
-      <input type="search" name="search" value="<%= typeof q === 'string' ? q : '' %>" placeholder="Search milk, bread, crisps..." aria-label="Search products">
+      <input type="search" name="q" value="<%= typeof q === 'string' ? q : '' %>" placeholder="Search milk, bread, crisps..." aria-label="Search products">
       <button type="submit">Search</button>
     </form>
     <nav>
