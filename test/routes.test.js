@@ -25,6 +25,8 @@ describe("shop pages", () => {
   });
 
   it("searches the catalogue and keeps the query", async () => {
+    const home = await request(app).get("/").expect(200);
+    assert.match(home.text, /<input type="search" name="q"/);
     const res = await request(app).get("/?q=milk").expect(200);
     assert.match(res.text, /Whole milk 2L/);
     assert.doesNotMatch(res.text, /Sourdough loaf/);
