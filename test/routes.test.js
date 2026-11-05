@@ -23,6 +23,29 @@ describe("shop pages", () => {
   it("returns 404 for unknown products", async () => {
     await request(app).get("/products/caviar").expect(404);
   });
+
+  it("searches the catalogue by name or description", async () => {
+    const res = await request(app).get("/?q=milk").expect(200);
+    assert.match(res.text, /Whole milk 2L/);
+    assert.match(res.text, /Semi-skimmed milk 1L/);
+    assert.match(res.text, /Milk chocolate bar 100g/);
+    assert.doesNotMatch(res.text, /Sourdough loaf/);
+    assert.match(res.text, /value="milk"/);
+  });
+
+  it("searches case-insensitively", async () => {
+    const res = await request(app).get("/?q=MILK").expect(200);
+    assert.match(res.text, /Whole milk 2L/);
+    assert.match(res.text, /Semi-skimmed milk 1L/);
+    assert.match(res.text, /Milk chocolate bar 100g/);
+    assert.doesNotMatch(res.text, /Sourdough loaf/);
+  });
+
+  it("shows a no-results message when nothing matches", async () => {
+    const res = await request(app).get("/?q=zzz").expect(200);
+    assert.match(res.text, /No results found/);
+    assert.doesNotMatch(res.text, /Sourdough loaf/);
+  });
 });
 
 describe("basket and checkout", () => {
